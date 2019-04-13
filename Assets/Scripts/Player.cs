@@ -9,9 +9,16 @@ public class Player : MonoBehaviour
     public float JumpStrength;
     public float Sensitivity;
 
+	public GameObject BluePortal;
+	public GameObject OrangePortal;
+
     private Vector2 myMouse;
     private Rigidbody myRigidbody;
     private bool isGrounded;
+
+
+	private GameObject ActiveBluePortal;
+	private GameObject ActiveOrangePortal;
 
 	// Use this for initialization
 	void Start ()
@@ -55,6 +62,26 @@ public class Player : MonoBehaviour
             isGrounded = false;
         }
     }
+	 
+	void ShootBluePortal()
+	{
+		Ray ray = myCamera.VeiwportPointToRay(new Vector3(0.5f, 0.5f, 0.0f));
+		RaycastHit hit;
+		if(Physics.Raycast(ray,out hit))
+		{
+			if(ActiveBluePortal)
+			{
+				Destroy(ActiveBluePortal);
+			}
+			ActiveBluePortal = Instantiate(BluePortal, hit.point);
+		}
+
+	}
+
+	void ShootOrangePortal()
+	{
+		
+	}
 
     void OnCollisionEnter(Collision collision)
     {
