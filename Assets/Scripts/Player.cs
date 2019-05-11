@@ -56,11 +56,29 @@ public class Player : MonoBehaviour
         }
     }
 
+    void Teleport(GameObject portal)
+    {
+        GameObject otherPortal;
+        if (portal.name == "BluePortal")
+        {
+            otherPortal = GameObject.Find("OrangePortal");
+        }
+        else
+        {
+            otherPortal = GameObject.Find("BluePortal");
+        }
+        transform.position = portal.transform.position;
+
+        float magnitude = myRigidbody.velocity.magnitude;
+        myRigidbody.velocity = otherPortal.transform.forward * magnitude;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Ground")
         {
             isGrounded = true;
         }
+        else if(collision.gameObject.tag == "Portal")
     }
 }
