@@ -8,10 +8,15 @@ public class Player : MonoBehaviour
     public float Speed;
     public float JumpStrength;
     public float Sensitivity;
+    public float waitime;
+
+    public GameObject BluePortal;
+    public GameObject OrangePortal;
 
     private Vector2 myMouse;
     private Rigidbody myRigidbody;
     private bool isGrounded;
+    private bool canTeleport = true;
 
 	// Use this for initialization
 	void Start ()
@@ -58,19 +63,29 @@ public class Player : MonoBehaviour
 
     void Teleport(GameObject portal)
     {
-        GameObject otherPortal;
-        if (portal.name == "BluePortal")
+        if (canTeleport)
         {
-            otherPortal = GameObject.Find("OrangePortal");
-        }
-        else
-        {
-            otherPortal = GameObject.Find("BluePortal");
-        }
-        transform.position = portal.transform.position;
 
-        float magnitude = myRigidbody.velocity.magnitude;
-        myRigidbody.velocity = otherPortal.transform.forward * magnitude;
+            GameObject otherPortal;
+            if (portal.name == "BluePortal")
+            {
+                otherPortal = GameObject.Find("OrangePortal");
+            }
+            else
+            {
+                otherPortal = GameObject.Find("BluePortal");
+            }
+            if (otherPortal)
+            {
+                transform.position = portal.transform.position;
+
+                float magnitude = myRigidbody.velocity.magnitude;
+                myRigidbody.velocity = otherPortal.transform.forward * magnitude;
+                canTeleport = false;
+                StartCoroutine(TeleportCooldown());
+            }
+
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -80,5 +95,10 @@ public class Player : MonoBehaviour
             isGrounded = true;
         }
         else if(collision.gameObject.tag == "Portal")
+    }
+    IEnumerator TeleportCooldown()
+    {
+       yield return new WaitForSeconds(waitTime);
+        canTeleport = true;
     }
 }
